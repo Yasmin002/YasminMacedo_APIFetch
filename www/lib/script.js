@@ -81,4 +81,34 @@ window.onload = function(){
     curso.value = "";
   }
 }
+///buscar com qr code
+ code.addEventListener("click", function(){
+  fetch (`https://www.jussimarleal.com.br/exemplo_api/pessoa/${result.text}`,{  
 
+      method:"get",
+      mode:'cors',
+      cache:'default'  
+  
+  }).then(response=>{
+     response.json().then(data => {
+     nome.value = data['nome'];
+     curso.value = data['curso'];
+     },
+        function (error) {
+        alert("Ocorreu um erro:" + error);
+      },
+      {
+          preferFrontCamera : false, 
+          showFlipCameraButton : true,
+          showTorchButton : true, 
+          torchOn: true, 
+          saveHistory: true, 
+          prompt : "Place a barcode inside the scan area", 
+          resultDisplayDuration: 500,
+          formats : "QR_CODE,PDF_417, CODE_39", 
+          orientation : "landscape", 
+          disableAnimations : true, 
+          disableSuccessBeep: false 
+    });
+  });
+ })
