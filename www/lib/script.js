@@ -24,6 +24,7 @@ window.onload = function(){
     }).then(()=>{
        alert("Registro efetuado com sucesso");
        limparCampos();
+       TestarConexao();
     }
     );
   });
@@ -40,6 +41,7 @@ window.onload = function(){
    response.json().then(data => {
      nome.value = data['nome'];
      curso.value = data['curso'];
+     TestarConexao();
       })
     })
   })
@@ -60,6 +62,7 @@ window.onload = function(){
     }).then(()=>{
        alert("Registro alterado com sucesso");
        limparCampos();
+       TestarConexao();
     });
   });
   
@@ -72,6 +75,7 @@ window.onload = function(){
      }).then(()=>{
        alert("O registro foi deletado com sucesso");
        limparCampos();
+       TestarConexao();
      });
    })
       
@@ -96,6 +100,7 @@ window.onload = function(){
      },
         function (error) {
         alert("Ocorreu um erro:" + error);
+         TestarConexao();
       },
       {
           preferFrontCamera : false, 
@@ -109,10 +114,10 @@ window.onload = function(){
           orientation : "landscape", 
           disableAnimations : true, 
           disableSuccessBeep: false 
-    });
+         });
   });
  })
-function Conecçao() {
+function TestarConexao() {
     var networkState = navigator.connection.type;
 
     var states = {};
@@ -125,8 +130,7 @@ function Conecçao() {
     states[Connection.CELL]     = 'Cell generic connection';
     states[Connection.NONE]     = 'No network connection';
 
-    alert('Tipo de conecção: ' + states[networkState]);
+    alert('Tipo de conexão: ' + states[networkState]);
 }
-
 checkConnection();
 
