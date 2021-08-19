@@ -7,9 +7,11 @@ window.onload = function(){
   const id = document.querySelector("#id");
   const alterar = document.querySelector("#alterar");
   const deletar = document.querySelector("#deletar");
+  const code = document.querySelector("#code");
 
   /// ação de cadastrar uma pessoa e curso
   cadastrar.addEventListener("click", function(){
+    TestarConexao();
     let formdata = new FormData();
     formdata.append('nome',`${nome.value}`);
     formdata.append('curso',`${curso.value}`);
@@ -24,13 +26,12 @@ window.onload = function(){
     }).then(()=>{
        alert("Registro efetuado com sucesso");
        limparCampos();
-       TestarConexao();
-    }
-    );
+    });
   });
 
   ///metodo que lista uma pessoa
   buscar.addEventListener("click", function(){
+  TestarConexao();
   fetch (`https://www.jussimarleal.com.br/exemplo_api/pessoa/${id.value}`,{  
 
       method:"get",
@@ -40,15 +41,15 @@ window.onload = function(){
   }).then(response=>{
    response.json().then(data => {
      nome.value = data['nome'];
-     curso.value = data['curso'];
-     TestarConexao();
+     curso.value = data['curso'];     
       })
     })
   })
 
     ///metodo para alterar os dados 
     alterar.addEventListener("click", function(){
-    fetch (`https://www.jussimarleal.com.br/exemplo_api/pessoa/${id.value}`,{  
+      TestarConexao();
+      fetch (`https://www.jussimarleal.com.br/exemplo_api/pessoa/${id.value}`,{  
       method:"put",
       mode:'cors',
       cache:'default',  
@@ -61,22 +62,21 @@ window.onload = function(){
       })
     }).then(()=>{
        alert("Registro alterado com sucesso");
-       limparCampos();
-       TestarConexao();
+       limparCampos();  
     });
   });
   
    /// metodo para deletar o registro
    deletar.addEventListener("click", function(){
-     fetch (`https://www.jussimarleal.com.br/exemplo_api/pessoa/${id.value}`,{  
+     TestarConexao();
+      fetch (`https://www.jussimarleal.com.br/exemplo_api/pessoa/${id.value}`,{  
       method:"delete",
       mode:'cors',
       cache:'default',
      }).then(()=>{
        alert("O registro foi deletado com sucesso");
        limparCampos();
-       TestarConexao();
-     });
+       });
    })
       
   ///metodo para limpar os campos
@@ -84,53 +84,60 @@ window.onload = function(){
     nome.value = "";
     curso.value = "";
   }
-}
-///buscar com qr code
- code.addEventListener("click", function(){
-  fetch (`https://www.jussimarleal.com.br/exemplo_api/pessoa/${result.text}`,{  
 
+///buscar com qr code
+  code.addEventListener("click", function(){
+    cordova.plugins.barcodeScanner.scan(
+      function (result) {
+      fetch(`https://www.jussimarleal.com.br/exemplo_api/pessoa/${result.text}`,{
       method:"get",
       mode:'cors',
-      cache:'default'  
-  
-  }).then(response=>{
-     response.json().then(data => {
-     nome.value = data['nome'];
-     curso.value = data['curso'];
-     },
-        function (error) {
-        alert("Ocorreu um erro:" + error);
-         TestarConexao();
+      cache:'default'
+    }).then(response=>{
+      response.json().then(data => {
+        nome.value = data['nome'];
+        curso.value = data['curso'];
+      })
+    })
+  },
+      function (error) {
+          alert("Ocorreu algum erro: " + error);
       },
       {
           preferFrontCamera : false, 
-          showFlipCameraButton : true,
-          showTorchButton : true, 
+          showFlipCameraButton : true, 
+          showTorchButton : true,
           torchOn: true, 
           saveHistory: true, 
           prompt : "Place a barcode inside the scan area", 
-          resultDisplayDuration: 500,
+          resultDisplayDuration: 500, 
           formats : "QR_CODE,PDF_417, CODE_39", 
-          orientation : "landscape", 
+          orientation : "landscape",
           disableAnimations : true, 
-          disableSuccessBeep: false 
-         });
-  });
- })
-function TestarConexao() {
+          disableSuccessBeep: true 
+      }
+   );
+});
+//metodo para sair do app
+function sair(){
+  navigator.app.exitApp();
+}
+
+//metodo verificar conexao
+ function TestarConexao() {
     var networkState = navigator.connection.type;
 
-    var states = {};
-    states[Connection.UNKNOWN]  = 'Unknown connection';
-    states[Connection.ETHERNET] = 'Ethernet connection';
-    states[Connection.WIFI]     = 'WiFi connection';
-    states[Connection.CELL_2G]  = 'Cell 2G connection';
-    states[Connection.CELL_3G]  = 'Cell 3G connection';
-    states[Connection.CELL_4G]  = 'Cell 4G connection';
-    states[Connection.CELL]     = 'Cell generic connection';
-    states[Connection.NONE]     = 'No network connection';
-
-    alert('Tipo de conexão: ' + states[networkState]);
+    if (networkState == Connection.NONE){
+    function TestarConexao(buttonIndex){
+       if(buttonIndex == "2"){
+        sair();
+       }
+     }
+navigator.notification.confirm(
+  "Você está sem conexão, tente novamente",
+   TestarConexao,
+   "Erro na Conexão!",
+    ['Tentar Novamente','Sair']);
+   }
+  }
 }
-checkConnection();
-

@@ -7,7 +7,8 @@
         "monaca-plugin-monaca-core": "3.3.1",
         "cordova-plugin-network-information": "2.0.2",
         "cordova-plugin-dialogs": "2.0.2",
-        "phonegap-plugin-barcodescanner": "8.1.0"
+        "phonegap-plugin-barcodescanner": "8.1.0",
+        "cordova-plugin-camera": "5.0.1"
     },
     "cordova": {
         "plugins": {
@@ -16,7 +17,8 @@
             "monaca-plugin-monaca-core": {},
             "cordova-plugin-network-information": {},
             "cordova-plugin-dialogs": {},
-            "phonegap-plugin-barcodescanner": {}
+            "phonegap-plugin-barcodescanner": {},
+            "cordova-plugin-camera": {}
         }
     },
     "scripts": {
